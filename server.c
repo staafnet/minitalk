@@ -6,7 +6,7 @@
 /*   By: rgrochow <staafnet@gmail.com>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 21:10:51 by rgrochow          #+#    #+#             */
-/*   Updated: 2024/07/04 18:48:08 by rgrochow         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:04:27 by rgrochow         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	get_char(int sig, siginfo_t *info, void *context)
 		bit = 0;
 		c = 0;
 	}
+	kill(info->si_pid, SIGUSR2);
 }
 
 void	write_pid(int pid)
@@ -60,11 +61,9 @@ int	main(void)
 	sa.sa_sigaction = get_char;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
-	{
-		sigaction(SIGUSR1, &sa, NULL);
-		sigaction(SIGUSR2, &sa, NULL);
 		pause();
-	}
 	return (0);
 }
